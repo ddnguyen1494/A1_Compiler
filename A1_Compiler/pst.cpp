@@ -18,6 +18,7 @@ void Pst::clear(Node * rp)
 	delete rp;
 }
 
+//print function
 void Pst::print(Node * rp) {
 	if (rp->get_numKid() > 0) {
 		std::cout << "(N: rule= # " << rp->get_ruleId()
