@@ -6,6 +6,7 @@
 #include <iostream>
 #include "pst.h"
 
+//Delete all the node
 void Pst::clear(Node * rp)
 {
 	if (!rp) {
