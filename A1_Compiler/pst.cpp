@@ -43,7 +43,7 @@ void Pst::p2acvt(Node * rp) {
 	switch (rId) {
 	case 14:{								//F -> Fatom		
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
-		rp->set_uplink = gma;
+        rp->set_uplink(gma);
 		break;
 	}
 	case 16: {								//F -> Fatom -> id
