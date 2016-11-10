@@ -41,69 +41,91 @@ void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
 	switch (rId) {
-	case 14:{								//F -> Fatom		
+        case 1:{                            //Pgm -> prog { Slist }
+            gma->change_specific_kid(0, rp->get_kid(0));
+            rp->get_kid(0)->change_specific_kid(0, rp->get_kid(2));
+            rp->get_kid(0)->set_uplink(gma);
+            rp->get_kid(2)->set_uplink(rp->get_kid(0));
+        }
+            
+        case 2:{
+            
+        }
+            
+        case 13:{                           //Z -> Opmul F Z
+            if(!rp->get_kid(2)){            //Z becomes EPS
+                rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));             //make F second kid of Opmul
+                rp->get_kid(0)->get_kid(1)->set_uplink(rp->get_kid((0)));           //change F's mom to opmul
+                gma->change_specific_kid(rp->get_position(), rp->get_kid(0));       //make gma points to Opmul
+                rp->get_kid(0)->set_uplink(gma);                                    //Change Opmul's mom to gma
+            }
+        }
+	case 14:{								//F -> Fatom
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
-        rp->set_uplink(gma);
+        rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
+            
+        case 15:{                           //F - > ( E )
+            gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
+            rp->get_kid(1)->set_uplink(gma);
+        }
+            
 	case 16: {								//F -> Fatom -> id
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 17: {								//F -> Fatom -> int	
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 18: {								//F -> Fatom -> float	
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 19: {								//F -> Fatom -> string
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 20: {								//Y -> Opadd -> +
 		gma->change_specific_kid(0, rp->get_kid(0));
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 21: {								//Y -> Opadd -> -		
 		gma->change_specific_kid(0, rp->get_kid(0));
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 22: {								//Z -> Opmul -> *
 		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 23: {								//Z -> Opmul -> /
 		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
 	case 24: {								//Z -> Opmul -> ^
 		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		rp->get_kid(0)->set_uplink(gma);
 		break;
 	}
 
