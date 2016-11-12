@@ -15,14 +15,23 @@
 class Node{
 	private:
 		std::string symbol;			//The symbol of the node
+	
 		Node* upLink;				//Uplink pointer pointing to the mom
+	
 		int position;				//position of the node on the RHS starting at 0
+	
 		Node * kids[4] = { nullptr };		//array of pointers pointing to all its kids (RHS Nodes)
+	
 		int ruleId;				//It has rule Id if its a LHS, otherwise intialized to -1
+	
 		int numKids = 0;			//Initialize number of kids to 0
+	
 		int lineNum; 				//line number terminal node
+	
 		int tokenId; 				//token id for terminal node
+	
 		std::string terminal;			//terminal used in printing out id|int|float|string|Opadd|Opmul
+	
 		int token_position;			//position in the line
 	public:
 		//Constructor 
