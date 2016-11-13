@@ -35,6 +35,10 @@ int main() {
 	cout << "----------Parse Successfully------------" << endl;
 
 	A1_lexer.print_pst();
+
+	cout << "--------------Parse tree construction: SUCCESSFUL ------------------" << endl<<endl;
+
+	A1_lexer.get_parser()->print_create_ast();
 	A1_lexer.print_symtab();
 	system("pause");
 	return 0;

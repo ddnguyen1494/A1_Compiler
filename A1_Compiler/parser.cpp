@@ -292,3 +292,8 @@ void Parser::print_symtab() {
 		std::cout << ")" << std::endl;
 	}
 }
+
+void Parser::print_create_ast() {
+	pst.p2ast(pst.get_root());
+	pst.print_preorder_ast(pst.get_root());
+}

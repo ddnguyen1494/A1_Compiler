@@ -47,6 +47,8 @@ public:
 	void set_tokenPosition(int);
 
 	int find_tokenId(std::string);
+
+	void print_create_ast();
 };
 
 #endif

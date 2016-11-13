@@ -18,6 +18,8 @@ private:
 	void print(Node *);
 
 	void p2acvt(Node *);
+
+	void print_ast(Node*);
 public:
 	Pst();
 
@@ -32,5 +34,7 @@ public:
 	void print_preorder(Node *);
 	
 	void p2ast(Node *);
+
+	void print_preorder_ast(Node *);
 };
 #endif
