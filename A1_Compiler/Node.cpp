@@ -47,9 +47,7 @@ void Node::set_kid(Node * kid){
 // Change a specific specific kid to the given kid
 // pos must be an index of an already existing kid
 void Node::change_specific_kid(int pos, Node * kid) {
-	if (pos >= 0 && pos < numKids) {
 		kids[pos] = kid;
-	}
 }
 
 Node * Node::get_kid(int kid_position){

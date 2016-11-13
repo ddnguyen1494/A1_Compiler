@@ -103,9 +103,9 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 					continue;				//Do nothing
 				}
 				else {
-					for (int index = rule.size()-1; index >= 0 ; index--) {
+					for (int index = rule.size() - 1, pos = 0; index >= 0; index--, pos++) {
 						// Create a new pst node
-						Node * node = new Node(rule[index], top, index, rule_id, lineNum, find_tokenId(rule[index]));
+						Node * node = new Node(rule[index], top, pos, 99, lineNum, find_tokenId(rule[index]));
 
 						// Add node to parent
 						top->set_kid(node);
@@ -117,7 +117,7 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 						if (node->get_tokenId() == 2) {
 							std::cout << "\ttoken id = " << node->get_tokenId() << std::endl;
 							// contstruct a new Node for symbol table
-							Node* id = new Node(rule[index], top, index, rule_id, lineNum, find_tokenId(rule[index]));
+							Node* id = new Node(rule[index], top, index, 99 , lineNum, find_tokenId(rule[index]));
 							id->set_terminal(token);
 							id->set_tokenPosition(token_position);
 							// if the id is already in the symbol table

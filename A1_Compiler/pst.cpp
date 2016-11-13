@@ -53,75 +53,179 @@ void Pst::print_ast(Node * rp) {
 
 	std::cout << ")" << std::endl;
 }
+
 void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
 	switch (rId) {
-	/*case 14:{								//F -> Fatom		
-		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
-        rp->set_uplink(gma);
+	case 12: {         // T -> F Z
+		std::cout << "\tcase12 kid0 is null? " << (rp->get_kid(0) == NULL) << std::endl;
+		if (rp->get_kid(0)->get_kid(1) == NULL) {
+			//gma abandon mom T and adopt Z
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set Z's mom to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+
+			std::cout << "\tcase12if " << rp->get_kid(0)->get_numKid() << std::endl;
+			std::cout << "\tcase12if " << rp->get_kid(0)->get_symbol() << std::endl;
+
+			// Z's 2nd child adopts F
+			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));
+			// set F's mom to be Z's 2nd child
+			rp->get_kid(1)->set_uplink(rp->get_kid(0));
+
+			delete rp;
+		}
+		else
+		{
+			//gma abandon mom T and adopt Z
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set Z's mom to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+
+			std::cout << "\tcase12else " << rp->get_kid(0)->get_numKid() << std::endl;
+			std::cout << "\tcase12else " << rp->get_kid(0)->get_symbol() << std::endl;
+
+			// Z's 2nd child adopts F
+			rp->get_kid(0)->get_kid(1)->change_specific_kid(1, rp->get_kid(1));
+			// set F's mom to be Z's 2nd child
+			rp->get_kid(1)->set_uplink(rp->get_kid(0)->get_kid(1));
+
+			delete rp;
+		}
 		break;
 	}
+	case 13: {         // Z -> Opmul F Z
+					   // Z is in pos 0, F is in pos 1, Opmul in pos 2
+		if (rp->get_kid(0) == NULL) {
+			//gma abandon mom Z and adopt Opmul
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(2));
+			// Opmul adopt sibling F
+			rp->get_kid(2)->change_specific_kid(0, rp->get_kid(1));
+			//set Opmul's mom to gma
+			rp->get_kid(2)->set_uplink(gma);
+			//set F's mom to Opmul
+			rp->get_kid(1)->set_uplink(rp->get_kid(2));
+			delete rp;
+		}
+		else {
+			//gma abandon mom Z and adopt kid Z's Opmul
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set kid Z's Opmul to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+			// mom Z's Opmul adopt sibling F
+			rp->get_kid(2)->change_specific_kid(0, rp->get_kid(1));
+			// set sibling F's mom to mom Z's Opmul
+			rp->get_kid(1)->set_uplink(rp->get_kid(2));
+
+			// kid Z's Opmul adopt mom Z's Opmul
+			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(2));
+			// set mom Z's Opmul's mom to kid Z's Opmul
+			rp->get_kid(2)->set_uplink(rp->get_kid(0));
+
+			delete rp;
+		}
+		break;
+	}
+	case 14: {								//F -> Fatom		
+		//grandma abandon F and adopt Fatom
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set float 's mom to F
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
+		break;
+	}
+
+	case 15: {                               //F -> ( E )
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
+		rp->get_kid(1)->set_uplink(gma);
+		delete rp->get_kid(0);
+		delete rp->get_kid(2);
+		delete rp;
+	}
 	case 16: {								//F -> Fatom -> id
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+											//F abandon Fatom and adopt id
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set id's mom to F
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 17: {								//F -> Fatom -> int	
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+											//F abandon Fatom and adopt int
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set int's mom to F
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 18: {								//F -> Fatom -> float	
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+											//F abandon Fatom and adopt float
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set float's mom to F
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 19: {								//F -> Fatom -> string
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+											//F abandon Fatom and adopt string
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set string's mom to F
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 20: {								//Y -> Opadd -> +
-		gma->change_specific_kid(0, rp->get_kid(0));
-		rp->set_uplink(gma);
+											//Y abandon Opadd and adopt plus
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set plus's mom to Y
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 21: {								//Y -> Opadd -> -		
-		gma->change_specific_kid(0, rp->get_kid(0));
-		rp->set_uplink(gma);
+											//Y abandon Opadd and adopt minus
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set minus's mom to Y
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 22: {								//Z -> Opmul -> *
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		//Z abandon Opmul and adopt asterisk
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set asterisk's mom to Z
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 23: {								//Z -> Opmul -> /
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		//Z abandon Opmul and adopt slash
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set slash 's mom to Z
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
 	case 24: {								//Z -> Opmul -> ^
-		gma->change_specific_kid(0, rp->get_kid(0));
-		gma->set_numKid(1);
-		rp->set_uplink(gma);
+		//Z abandon Opmul and adopt caret
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set caret 's mom to Z
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
-	}*/
+	}
 
 	case 25: {								//Anything ->Anything -> Eps
 		rp->get_uplink()->change_specific_kid(rp->get_position(), NULL);
@@ -176,7 +280,7 @@ void Pst::p2ast(Node * rp) {
 	if (!rp) {
 		return;
 	}
-	for (int i = rp->get_numKid() - 1; i >= 0; i--) {
+	for (int i = 0; i < rp->get_numKid(); i++) {
 		p2ast(rp->get_kid(i));
 	}
 	p2acvt(rp);

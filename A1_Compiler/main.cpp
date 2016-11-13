@@ -41,7 +41,7 @@ int main() {
 	A1_lexer.get_parser()->print_create_ast();
 	A1_lexer.print_symtab();
 	system("pause");
-	return 0;
+ 	return 0;
 
 	
 }
