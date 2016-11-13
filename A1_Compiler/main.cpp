@@ -4,6 +4,7 @@
 //Written on 9/23/2016
 //File descriptions: Main function that gets every line of input and passes it to Lexer's lex()
 //and manually parser the "eof"
+//Modified by Sae Hun Kim and Anthony Nguyen
 
 #include <string>
 #include <vector>
@@ -31,12 +32,10 @@ int main() {
 
 	//EOF encountered. Call Lexer::set_lexeme() and Lexer::output
 	A1_lexer.get_parser()->parse("eof", 0, lineNum);
-	cout << "----------Parse: SUCCESSFUL------------" << endl;
+	cout << "----------Parse Successfully------------" << endl;
 
 	A1_lexer.print_pst();
-	cout << "----------Parse tree construction: SUCCESSFUL--------" << endl << endl;
-	
-	A1_lexer.create_and_print_ast();
+	A1_lexer.print_symtab();
 	system("pause");
 	return 0;
 

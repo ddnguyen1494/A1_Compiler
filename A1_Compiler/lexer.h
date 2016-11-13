@@ -2,6 +2,7 @@
 //Author: Daniel Nguyen
 //Written on 10/22/2016
 //Description: This header file contains the declaration of Lexer class
+//Modified by Sae Hun Kim and Anthony Nguyen
 
 #ifndef LEXER_H
 #define LEXER_H
@@ -30,9 +31,10 @@ public:
     void get_operator(int &, std::string &);
     void get_string(int &, std::string&);
 	void output(int);
-	void create_and_print_ast();
-	// Addition by Sae Hun Kim
+
+	// Addition by Sae Hun Kim and Anthony Nguyen
 	void print_pst();
+	void print_symtab();
 };
 
 #endif

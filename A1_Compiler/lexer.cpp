@@ -2,6 +2,7 @@
 //Author: Daniel Nguyen
 //Written on 10/22/2016
 //Description: This file defines all the functions in Lexer class
+//Modified by Sae Hun Kim and Anthony Nguyen
 
 #include <string>
 #include<unordered_map>
@@ -268,6 +269,10 @@ void Lexer::print_pst() {
 	A1_parser.print_pst();
 }
 
-void Lexer::create_and_print_ast() {
-	A1_parser.create_print_ast();
+/********************************************************************************************************
+*											Lexer::print_symtab()                                       *
+*	This function prints the symbol table.                                            					*
+********************************************************************************************************/
+void Lexer::print_symtab() {
+	A1_parser.print_symtab();
 }
