@@ -2,7 +2,7 @@
 //Author: Daniel Nguyen
 //Written on 10/23/2016
 //Description: This file defines all parser class's functions
-//Modified by Sae Hun Kim
+//Modified by Sae Hun Kim and Anthony Nguyen
 
 #include <iostream>
 #include <iomanip>
@@ -11,10 +11,9 @@
 #include "map_storing_token.h"
 #include "map_storing_abbreviation.h"
 
-// Additions by Sae Hun Kim
+// Additions by Sae Hun Kim and Anthony Nguyen
 #include "Node.h"
 #include "pst.h"
-
 
 /****************************************************************************
 *						Parser()											*
@@ -99,20 +98,47 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 				stack.pop_back();
 				top->set_ruleId(rule_id);
 				if (rule[0] == "eps") {
-					Node * node = new Node("eps", top, 1, -1, -1, -1);
+					Node * node = new Node("eps", top, 1, rule_id, -1, -1);
 					top->set_kid(node);
 					continue;				//Do nothing
 				}
 				else {
 					for (int index = rule.size()-1; index >= 0 ; index--) {
 						// Create a new pst node
-						Node * node = new Node(rule[index], top, index, rule_id, -1, find_tokenId(rule[index]));
+						Node * node = new Node(rule[index], top, index, rule_id, lineNum, find_tokenId(rule[index]));
 
 						// Add node to parent
 						top->set_kid(node);
 
 						// Add node to stack
 						stack.push_back(node);
+
+						// Check if node is an identifier
+						if (node->get_tokenId() == 2) {
+							std::cout << "\ttoken id = " << node->get_tokenId() << std::endl;
+							// contstruct a new Node for symbol table
+							Node* id = new Node(rule[index], top, index, rule_id, lineNum, find_tokenId(rule[index]));
+							id->set_terminal(token);
+							id->set_tokenPosition(token_position);
+							// if the id is already in the symbol table
+							if (symtab.find(id->get_terminal()) != symtab.end()) {
+								std::cout << "\t\t" << id->get_terminal() << " is inside already" << std::endl;
+								std::vector<Node*> occurrences = symtab[id->get_terminal()];
+								occurrences.push_back(id);
+								std::cout << "\t\toccureences.size() " << occurrences.size() << std::endl;
+								symtab[id->get_terminal()] = occurrences;
+							}
+							// if the id is not in the symbol table
+							else {
+								std::cout << "\t\t" << id->get_terminal() << " is NOT inside already" << std::endl;
+								// create vector to store id occurences
+								std::vector<Node*> occurrences;
+								occurrences.push_back(id);
+
+								// insert new key,value pair in to symtab
+								symtab[id->get_terminal()] = occurrences;
+							}
+						}
 					}
 				}
 			}
@@ -238,11 +264,10 @@ int Parser::find_tokenId(std::string token) {
 		return 4;
 	else if (token == "string")
 		return 5;
+	else if (token == "id") //Token is an identifier not found in map
+		return 2;
 	else if (get_token == token_map.end()) {
-		if (token == "id")																	//Token is an identifier not found in map
-			return 2;
-		else																					//Return the ID for error
-			return 99;
+		return 99; //Return the ID for error
 	}
 	else																						//Found and return token's ID
 	{
@@ -250,8 +275,20 @@ int Parser::find_tokenId(std::string token) {
 	}
 }
 
-
-void Parser::create_print_ast() {
-	pst.p2ast(pst.get_root());
-	pst.print_preorder_ast(pst.get_root());
+/********************************************************************************************************
+*											Parser::print_symtab()                                      *
+*	This function prints the symbol table.                                             					*
+********************************************************************************************************/
+void Parser::print_symtab() {
+	std::cout << "Printing symtab" << symtab.size() << std::endl;
+	typedef std::map<std::string, std::vector<Node*>>::iterator it_type;
+	for (it_type iterator = symtab.begin(); iterator != symtab.end(); iterator++) {
+		std::cout << "(Id: \"" << iterator->first << "\"";
+		std::vector<Node *> occurrences = iterator->second;
+		for (int i = 0; i < occurrences.size(); i++) {
+			std::cout << " (T: lin= " << occurrences[i]->get_lineNum() << " ";
+			std::cout << "pos= " << occurrences[i]->get_tokenPosition() << " )";
+		}
+		std::cout << ")" << std::endl;
+	}
 }

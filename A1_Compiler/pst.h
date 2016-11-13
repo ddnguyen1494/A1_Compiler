@@ -1,9 +1,5 @@
-/*
+/**
 * Created by Daniel Nguyen
-* Email: duynguyen1494@fullerton.edu
-* Created date: 09/02/16
-* Modified by Sae Hun Kim, Anthony Nguyen
-* Modified date: 09/11/16
 */
 
 #ifndef PST_H
@@ -14,40 +10,27 @@
 
 class Pst {
 private:
-	Node * _root;				//root of the tree
+	Node * _root;
+	Node * top_stack;
 
-	Node * top_stack;			//top of the stack; primarily used to hook up kids' nodes to the mom
+	void clear(Node*);
 
-	void clear(Node*);			//Clear function to deallocate every node of the tree
+	void print(Node *);
 
-	void print(Node *);			//print out node's info according to pst requirements
-	
-	void p2acvt(Node *);		//Modify each node to make it ast's node
-
-	void print_ast(Node *);		//print out node's info according to ast requirements
+	void p2acvt(Node *);
 public:
-	//Constructor
-	Pst();					
-	
-	//Destructor
-	~Pst();					
-	
-	//Check if the tree is empty( has no node)
-	bool is_empty();			
+	Pst();
 
-	//Getter function to retrieve the root of the tree
-	Node * get_root();			
-	
-	//Setter function for the root of the tree
+	~Pst();
+
+	bool is_empty();
+
+	Node * get_root();
+
 	void set_root(Node *);
-	
-	//A recursive function to traverse the tree preorder (used for printing out node's data)
+
 	void print_preorder(Node *);
 	
-	//A recursive function to traverse the tree preorder (used for converting pst to ast)
 	void p2ast(Node *);
-
-	//Print function for printing out ast node
-	void print_preorder_ast(Node *);
 };
 #endif
