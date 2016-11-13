@@ -13,7 +13,8 @@ void Pst::clear(Node * rp)
 		return;
 	}
 	for (int i = 0; i < rp->get_numKid(); i++) {
-		clear(rp->get_kid(i));
+        if(rp->get_kid(i) != NULL)
+            clear(rp->get_kid(i));
 	}
 	delete rp;
 }
@@ -23,8 +24,10 @@ void Pst::print(Node * rp) {
 	if (rp->get_numKid() > 0) {
 		std::cout << "(N: rule= # " << rp->get_ruleId()
 			<< ": " << rp->get_symbol() << " = ";
-		for (int i = rp->get_numKid() -1 ; i >= 0; i--)
-			std::cout << rp->get_kid(i)->get_symbol() << " ";
+        for (int i = rp->get_numKid() -1 ; i >= 0; i--){
+            if(rp->get_kid(i) != NULL)
+                std::cout << rp->get_kid(i)->get_symbol() << " ";
+        }
 		
 
 		if ((rp->get_numKid() == 1) && (rp->get_kid(0)->get_numKid() == 0) && (rp->get_kid(0)->get_symbol() != "eps"))
@@ -39,9 +42,9 @@ void Pst::print(Node * rp) {
 
 void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
-	Node * gma = rp->get_uplink();
+	//Node * gma = rp->get_uplink();
 	switch (rId) {
-        case 1:{                            //Pgm -> prog { Slist }
+        /*case 1:{                            //Pgm -> prog { Slist }
             gma->change_specific_kid(0, rp->get_kid(0));
             rp->get_kid(0)->change_specific_kid(0, rp->get_kid(2));
             rp->get_kid(0)->set_uplink(gma);
@@ -52,29 +55,43 @@ void Pst::p2acvt(Node * rp) {
             
         }
             
+        case 12:{
+            
+        }
         case 13:{                           //Z -> Opmul F Z
-            if(!rp->get_kid(2)){            //Z becomes EPS
+            if(!rp->get_kid(2)){            //the second Z becomes EPS
                 rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));             //make F second kid of Opmul
                 rp->get_kid(0)->get_kid(1)->set_uplink(rp->get_kid((0)));           //change F's mom to opmul
                 gma->change_specific_kid(rp->get_position(), rp->get_kid(0));       //make gma points to Opmul
                 rp->get_kid(0)->set_uplink(gma);                                    //Change Opmul's mom to gma
             }
-        }
-	case 14:{								//F -> Fatom
+            
+            else{
+                rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));
+                rp->get_kid(1)->set_uplink(rp->get_kid(0));
+                
+            }
+        }*/
+	/*case 14:{								//F -> Fatom
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
         rp->get_kid(0)->set_uplink(gma);
+        delete rp;
 		break;
 	}
             
         case 15:{                           //F - > ( E )
             gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
             rp->get_kid(1)->set_uplink(gma);
+            delete(rp->get_kid(0));
+            delete(rp->get_kid(2));
+            break;
         }
             
 	case 16: {								//F -> Fatom -> id
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
 		rp->get_kid(0)->set_uplink(gma);
+        delete rp;
 		break;
 	}
 
@@ -82,6 +99,7 @@ void Pst::p2acvt(Node * rp) {
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
 		rp->get_kid(0)->set_uplink(gma);
+        delete rp ;
 		break;
 	}
 
@@ -89,6 +107,7 @@ void Pst::p2acvt(Node * rp) {
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
@@ -96,40 +115,47 @@ void Pst::p2acvt(Node * rp) {
 		gma->change_specific_kid(0, rp->get_kid(0));
 		gma->set_numKid(1);
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
 	case 20: {								//Y -> Opadd -> +
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
 	case 21: {								//Y -> Opadd -> -		
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
 	case 22: {								//Z -> Opmul -> *
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
 	case 23: {								//Z -> Opmul -> /
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
 
 	case 24: {								//Z -> Opmul -> ^
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
+        delete(rp);
 		break;
 	}
-
+*/
 	case 25: {								//Anything ->Anything -> Eps
+        rp->get_uplink()->change_specific_kid(rp->get_position(), nullptr);
 		delete rp->get_kid(0);				//delete eps node
 		delete rp;							//delete eps node's mom
 		break;

@@ -34,6 +34,10 @@ int main() {
 	cout << "----------Parse Successfully------------" << endl;
 
 	A1_lexer.print_pst();
+    
+    cout << "----------Parse tree built successfully----------" << endl;
+    cout << endl;
+    A1_lexer.convert_print_ast();
 	system("pause");
 	return 0;
 

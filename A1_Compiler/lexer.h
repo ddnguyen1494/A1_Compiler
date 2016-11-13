@@ -33,6 +33,8 @@ public:
 
 	// Addition by Sae Hun Kim
 	void print_pst();
+    
+    void convert_print_ast();
 };
 
 #endif

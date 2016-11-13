@@ -267,3 +267,7 @@ void Lexer::output(int lineNum) {
 void Lexer::print_pst() {
 	A1_parser.print_pst();
 }
+
+void Lexer::convert_print_ast(){
+    A1_parser.convert2ast();
+}
