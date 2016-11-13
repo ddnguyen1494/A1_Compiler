@@ -99,7 +99,7 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 				stack.pop_back();
 				top->set_ruleId(rule_id);
 				if (rule[0] == "eps") {
-					Node * node = new Node("eps", top, 1, rule_id, -1, -1);
+					Node * node = new Node("eps", top, 1, -1, -1, -1);
 					top->set_kid(node);
 					continue;				//Do nothing
 				}
@@ -248,4 +248,10 @@ int Parser::find_tokenId(std::string token) {
 	{
 		return get_token->second;
 	}
+}
+
+
+void Parser::create_print_ast() {
+	pst.p2ast(pst.get_root());
+	pst.print_preorder_ast(pst.get_root());
 }

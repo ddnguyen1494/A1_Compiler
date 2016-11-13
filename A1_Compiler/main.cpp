@@ -31,9 +31,12 @@ int main() {
 
 	//EOF encountered. Call Lexer::set_lexeme() and Lexer::output
 	A1_lexer.get_parser()->parse("eof", 0, lineNum);
-	cout << "----------Parse Successfully------------" << endl;
+	cout << "----------Parse: SUCCESSFUL------------" << endl;
 
 	A1_lexer.print_pst();
+	cout << "----------Parse tree construction: SUCCESSFUL--------" << endl << endl;
+	
+	A1_lexer.create_and_print_ast();
 	system("pause");
 	return 0;
 

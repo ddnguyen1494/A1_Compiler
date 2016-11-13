@@ -30,7 +30,7 @@ public:
     void get_operator(int &, std::string &);
     void get_string(int &, std::string&);
 	void output(int);
-
+	void create_and_print_ast();
 	// Addition by Sae Hun Kim
 	void print_pst();
 };

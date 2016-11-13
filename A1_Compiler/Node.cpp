@@ -76,11 +76,6 @@ int Node::get_numKid() {
 	return numKids;
 }
 
-//Decreasing the nubmer of kid
-void Node::dec_numKid() {
-	--numKids;
-}
-
 //Setter function for number of kids.
 void Node::set_numKid(int num) {
 	numKids = num;

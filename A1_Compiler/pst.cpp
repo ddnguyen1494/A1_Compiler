@@ -24,7 +24,7 @@ void Pst::clear(Node * rp)
 //print function for pst
 void Pst::print(Node * rp) {
 	if (rp->get_numKid() > 0) {
-		std::cout << "(N: rule= # " << rp->get_ruleId()
+		std::cout << "(pos= " << rp->get_position() <<"N: rule= #" << rp->get_ruleId()
 			<< ": " << rp->get_symbol() << " = ";
 		for (int i = rp->get_numKid() -1 ; i >= 0; i--)
 			std::cout << rp->get_kid(i)->get_symbol() << " ";
@@ -45,7 +45,7 @@ void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
 	switch (rId) {
-        case 1:{                            //Pgm -> prog { Slist }
+       /* case 1:{                            //Pgm -> prog { Slist }
             gma->change_specific_kid(0, rp->get_kid(0));
             rp->get_kid(0)->change_specific_kid(0, rp->get_kid(2));
             rp->get_kid(0)->set_uplink(gma);
@@ -131,9 +131,10 @@ void Pst::p2acvt(Node * rp) {
 		gma->change_specific_kid(0, rp->get_kid(0));
 		rp->get_kid(0)->set_uplink(gma);
 		break;
-	}
+	}*/
 
 	case 25: {								//Anything ->Anything -> Eps
+		rp->get_uplink()->change_specific_kid(rp->get_position(), NULL);
 		delete rp->get_kid(0);				//delete eps node
 		delete rp;							//delete eps node's mom
 		break;
@@ -143,6 +144,20 @@ void Pst::p2acvt(Node * rp) {
 	}
 }
 
+//Print out node's info for ast
+void Pst::print_ast(Node * rp) {
+	if (rp->get_symbol() != "Pgm") {
+		std::cout << "(N " << rp->get_position() << ": " << rp->get_symbol()
+			<< " mom= " << rp->get_uplink()->get_tokenId() << " kids= " << rp->get_numKid();
+		if ((rp->get_numKid() == 1) && (rp->get_kid(0)->get_numKid() == 0) && (rp->get_kid(0)->get_symbol() != "eps"))
+		{
+			std::cout << "(T: " << rp->get_kid(0)->get_terminal() << " lin= " << rp->get_kid(0)->get_lineNum()
+				<< " pos= " << rp->get_kid(0)->get_tokenPosition() << ")";
+		}
+
+		std::cout << ")" << std::endl;
+	}
+}
 //Constructor for the tree that creates a fixed header node that will have one kid.
 Pst::Pst() {
 	Node * header = new Node("header", nullptr, 0, 0, 0, 0);
@@ -193,4 +208,14 @@ void Pst::p2ast(Node * rp) {
 		p2ast(rp->get_kid(i));
 	}
 	p2acvt(rp);
+}
+
+void Pst::print_preorder_ast(Node* rp) {
+	if (!rp) {
+		return;
+	}
+	print_ast(rp);
+	for (int i = rp->get_numKid() - 1; i >= 0; i--) {
+		print_preorder_ast(rp->get_kid(i));
+	}
 }

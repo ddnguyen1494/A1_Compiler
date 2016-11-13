@@ -20,9 +20,11 @@ private:
 
 	void clear(Node*);			//Clear function to deallocate every node of the tree
 
-	void print(Node *);			//print out node's data
+	void print(Node *);			//print out node's info according to pst requirements
 	
-	void p2acvt(Node *);			//Modify each node to make it ast's node
+	void p2acvt(Node *);		//Modify each node to make it ast's node
+
+	void print_ast(Node *);		//print out node's info according to ast requirements
 public:
 	//Constructor
 	Pst();					
@@ -44,5 +46,8 @@ public:
 	
 	//A recursive function to traverse the tree preorder (used for converting pst to ast)
 	void p2ast(Node *);
+
+	//Print function for printing out ast node
+	void print_preorder_ast(Node *);
 };
 #endif

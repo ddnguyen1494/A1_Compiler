@@ -36,7 +36,7 @@ public:
 	void find_rule();
 	bool check_fatom_opadd_opmul(int, std::string);
 	std::string getAbbreviation(std::string);
-
+	void create_print_ast();
 	// Additions by Sae Hun Kim
 	void print_pst();
 
@@ -44,6 +44,8 @@ public:
 	void set_tokenPosition(int);
 
 	int find_tokenId(std::string);
+
+
 };
 
 #endif
