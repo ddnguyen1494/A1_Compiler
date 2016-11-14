@@ -39,24 +39,21 @@ void Pst::print(Node * rp) {
 
 
 void Pst::print_ast(Node * rp) {
-	if (rp->get_symbol() != "Pgm") 
-	{
-		std::cout << "N " << rp->get_position() << ": " << rp->get_symbol()
-			<< " mom= " << rp->get_uplink()->get_tokenId() << " kids= " << rp->get_numKid();
+	if (rp->get_symbol() != "Pgm") {
+		std::cout << "N " << rp->get_nodeCreationOrder() << ": " << rp->get_symbol()
+			<< " mom= " << rp->get_uplink()->get_nodeCreationOrder() << " kids= " << rp->get_numKid() << " ";
+		if (rp->get_tokenId() == 2 || rp->get_tokenId() == 3 || rp->get_tokenId() == 4 || rp->get_tokenId() == 5 ) {
+			std::cout << "(T: " << rp->get_terminal() << " lin= " << rp->get_lineNum()
+				<< " pos= " << rp->get_tokenPosition();
+		}
+		std::cout << ")" << std::endl;
 	}
-
-	if ((rp->get_numKid() == 1) && (rp->get_kid(0)->get_numKid() == 0) && (rp->get_kid(0)->get_symbol() != "eps"))
-	{
-		std::cout << "(T: " << rp->get_kid(0)->get_terminal() << " lin= " << rp->get_kid(0)->get_lineNum()
-			<< " pos= " << rp->get_kid(0)->get_tokenPosition() << ")";
-	}
-
-	std::cout << ")" << std::endl;
 }
 
 void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
+
 	switch (rId) {
 	case 1:								//Pgm -> prog { Slist }
 	{
@@ -74,6 +71,7 @@ void Pst::p2acvt(Node * rp) {
 		delete rp->get_kid(0);
 		delete rp->get_kid(2);
 		delete rp;
+		break;
 	}
 	case 2: {							//S_list -> Stmt semi Slist
 		//Stmt has pos 2, semi has pos 1, Slist has pos 0
@@ -82,7 +80,6 @@ void Pst::p2acvt(Node * rp) {
 		gma->change_specific_kid(rp->get_position(), NULL);
 		prog_vector.push_back(rp->get_kid(2));
 		delete rp->get_kid(1);
-		delete rp->get_kid(2);
 		delete rp;
 		break;
 	}
@@ -165,7 +162,6 @@ void Pst::p2acvt(Node * rp) {
 		break;
 	}
 	case 10: { //	E -> T Y
-		std::cout << "\tcase10 kid0 is null? " << (rp->get_kid(0) == NULL) << std::endl;
 		if (rp->get_kid(0) == NULL) {
 			//gma abandon mom E and adopt T
 			gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
@@ -179,10 +175,6 @@ void Pst::p2acvt(Node * rp) {
 			//set Y's mom to gma
 			rp->get_kid(0)->set_uplink(gma);
 
-
-			std::cout << "\tcase10if " << rp->get_kid(0)->get_numKid() << std::endl;
-			std::cout << "\tcase10if " << rp->get_kid(0)->get_symbol() << std::endl;
-
 			// Y's 2nd child adopts T
 			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));
 			// set T's mom to be Y's 2nd child
@@ -192,14 +184,11 @@ void Pst::p2acvt(Node * rp) {
 		}
 		else
 		{
+			std::cout << "\tcase10 else" << std::endl;
 			//gma abandon mom E and adopt Y
 			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 			//set Y's mom to gma
 			rp->get_kid(0)->set_uplink(gma);
-
-
-			std::cout << "\tcase10else " << rp->get_kid(0)->get_numKid() << std::endl;
-			std::cout << "\tcase10else " << rp->get_kid(0)->get_symbol() << std::endl;
 
 			// Y's 2nd child adopts T
 			rp->get_kid(0)->get_kid(1)->change_specific_kid(1, rp->get_kid(1));
@@ -313,7 +302,7 @@ void Pst::p2acvt(Node * rp) {
 		break;
 	}
 	case 14: {								//F -> Fatom		
-		//grandma abandon F and adopt Fatom
+											//grandma abandon F and adopt Fatom
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 		//set float 's mom to F
 		rp->get_kid(0)->set_uplink(gma);
@@ -383,7 +372,7 @@ void Pst::p2acvt(Node * rp) {
 	}
 
 	case 22: {								//Z -> Opmul -> *
-		//Z abandon Opmul and adopt asterisk
+											//Z abandon Opmul and adopt asterisk
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 		//set asterisk's mom to Z
 		rp->get_kid(0)->set_uplink(gma);
@@ -392,7 +381,7 @@ void Pst::p2acvt(Node * rp) {
 	}
 
 	case 23: {								//Z -> Opmul -> /
-		//Z abandon Opmul and adopt slash
+											//Z abandon Opmul and adopt slash
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 		//set slash 's mom to Z
 		rp->get_kid(0)->set_uplink(gma);
@@ -401,7 +390,7 @@ void Pst::p2acvt(Node * rp) {
 	}
 
 	case 24: {								//Z -> Opmul -> ^
-		//Z abandon Opmul and adopt caret
+											//Z abandon Opmul and adopt caret
 		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 		//set caret 's mom to Z
 		rp->get_kid(0)->set_uplink(gma);
@@ -422,7 +411,7 @@ void Pst::p2acvt(Node * rp) {
 Pst::Pst() {
 	// The prompt states "The PST has an extra fixed header node that will have one kid"
 	// I believe this extra fixed header node is best implemented in the contructor of the PST
-	Node * header = new Node("header", nullptr, 0, 0, 0, 0);
+	Node * header = new Node("header", nullptr, 0, 0, 0, 0, -1);
 	header->set_kid(nullptr); // Give the header an empty soulless kid for now
 	_root = header;
 }
@@ -436,6 +425,9 @@ bool Pst::is_empty() {
 	return _root == NULL;
 }
 
+Node * Pst::get_true_root() {
+	return _root;
+}
 // Returns the only child of the fixed header
 // For most purposes outside of the parse tree, the "root" is the only child of the fixed header
 Node * Pst::get_root () {
@@ -473,7 +465,7 @@ void Pst::print_preorder_ast(Node * rp) {
 		return;
 	}
 	print_ast(rp);
-	for (int i = rp->get_numKid() - 1; i >= 0; i--) {
+	for (int i = 3; i >= 0; i--) {
 		print_preorder_ast(rp->get_kid(i));
 	}
 }

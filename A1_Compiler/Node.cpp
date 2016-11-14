@@ -5,8 +5,8 @@
 
 #include "Node.h"
 
-Node::Node(std::string sym, Node * mom, int pos, int ruleNum, int lineNum, int tokenId)
-	: symbol(sym), upLink(mom), position(pos), ruleId(ruleNum), lineNum(lineNum), tokenId(tokenId) {};
+Node::Node(std::string sym, Node * mom, int pos, int ruleNum, int lineNum, int tokenId, int nodeCreationOrder)
+	: symbol(sym), upLink(mom), position(pos), ruleId(ruleNum), lineNum(lineNum), tokenId(tokenId), nodeCreationOrder(nodeCreationOrder) {};
 
 void Node::set_symbol(std::string s){
 	symbol = s;
@@ -92,4 +92,9 @@ void Node::set_tokenPosition(int pos) {
 
 int Node::get_tokenPosition() {
 	return token_position;
+}
+
+
+int Node::get_nodeCreationOrder() {
+	return nodeCreationOrder;
 }

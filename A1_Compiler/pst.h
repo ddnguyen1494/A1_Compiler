@@ -13,6 +13,7 @@ using std::vector;
 class Pst {
 private:
 	Node * _root;
+
 	Node * top_stack;
 
 	void clear(Node*);
@@ -29,6 +30,8 @@ public:
 	Pst();
 
 	~Pst();
+
+	Node * get_true_root();
 
 	bool is_empty();
 
