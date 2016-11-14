@@ -114,7 +114,6 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 
 						// Check if node is an identifier
 						if (node->get_tokenId() == 2) {
-							std::cout << "\ttoken id = " << node->get_tokenId() << std::endl;
 							// contstruct a new Node for symbol table
 							Node* id = new Node(rule[index], top, index, 99 , lineNum, find_tokenId(rule[index]), ++nodeCreationCounter);
 							id->set_terminal(token);
@@ -253,7 +252,6 @@ int Parser::get_tokenPosition() {
 }
 
 int Parser::find_tokenId(std::string token) {
-	std::cout << "\t\tfind_tokenId token = " << token << std::endl;
 	std::unordered_map<std::string, int>::const_iterator get_token = token_map.find(token);
 	if (token == "int")
 		return 3;
@@ -292,5 +290,5 @@ void Parser::print_symtab() {
 
 void Parser::print_create_ast() {
 	pst.p2ast(pst.get_root());
-	pst.print_preorder_ast(pst.get_root());
+	pst.print_preorder_ast(pst.get_root(), 0);
 }

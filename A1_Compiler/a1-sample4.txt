@@ -1,0 +1,7 @@
+prog { // Find the circumference of a circle.
+PI = 3.14;
+print( "Input radius> ", );
+rx = input;
+circum = 2 * PI * rx;
+print( "Circumf= ", circum, );
+}

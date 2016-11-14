@@ -58,12 +58,13 @@ int Node::get_numKid() {
 	return numKids;
 }
 
-void Node::dec_numKid() {
-	--numKids;
-}
-
-void Node::set_numKid(int num) {
-	numKids = num;
+void Node::set_numKid() {
+	numKids = 0;
+	for (int i = 0; i < 5; i++)
+	{
+		if (kids[i] != NULL)
+			numKids++;
+	}
 }
 
 int Node::get_ruleId() {
