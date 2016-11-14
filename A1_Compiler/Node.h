@@ -21,8 +21,9 @@ class Node{
 		int tokenId; // Added token id per Daniel's request
 		std::string terminal;			//Add terminal symbol to print out actual string | int | float | ident
 		int token_position;				//Add token position because printing out string| int | float | ident require this
+		int nodeCreationOrder;
 	public:
-		Node(std::string, Node * , int, int, int, int);
+		Node(std::string, Node * , int, int, int, int, int);
 		
 		//Add in to handle situation Fatom = string/int/id/float because we need to print out token, line, and position for those
 		std::string get_terminal();
@@ -56,6 +57,8 @@ class Node{
 
 		int get_tokenPosition();
 		void set_tokenPosition(int);
+
+		int get_nodeCreationOrder();
 };
 
 

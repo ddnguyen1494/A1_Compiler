@@ -25,10 +25,10 @@ Parser::Parser() {
 	token_position = 0;
 	// Push eof unto stack
 	// PST does not require an eof so it needs no uplink
-	stack.push_back(new Node("eof", nullptr, 0, -1, -1, -1));
+	stack.push_back(new Node("eof", nullptr, 0, -1, -1, -1, -1));
 
 	// Push Pgm unto stack
-	Node * root = new Node("Pgm", pst.get_root(), 0, 1, -1, -1);
+	Node * root = new Node("Pgm", pst.get_true_root(), 0, 1, -1, -1, -1);
 	stack.push_back(root);
 
 	// Set PST's fixed header node's only child as Pgm
@@ -98,15 +98,14 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 				stack.pop_back();
 				top->set_ruleId(rule_id);
 				if (rule[0] == "eps") {
-					Node * node = new Node("eps", top, 1, -1, -1, -1);
+					Node * node = new Node("eps", top, 1, -1, -1, -1, ++nodeCreationCounter);
 					top->set_kid(node);
 					continue;				//Do nothing
 				}
 				else {
 					for (int index = rule.size() - 1, pos = 0; index >= 0; index--, pos++) {
 						// Create a new pst node
-						Node * node = new Node(rule[index], top, pos, 99, lineNum, find_tokenId(rule[index]));
-
+						Node * node = new Node(rule[index], top, pos, 99, lineNum, find_tokenId(rule[index]), ++nodeCreationCounter);
 						// Add node to parent
 						top->set_kid(node);
 
@@ -117,20 +116,17 @@ bool Parser::parse(std::string token, int token_id, int lineNum)
 						if (node->get_tokenId() == 2) {
 							std::cout << "\ttoken id = " << node->get_tokenId() << std::endl;
 							// contstruct a new Node for symbol table
-							Node* id = new Node(rule[index], top, index, 99 , lineNum, find_tokenId(rule[index]));
+							Node* id = new Node(rule[index], top, index, 99 , lineNum, find_tokenId(rule[index]), ++nodeCreationCounter);
 							id->set_terminal(token);
 							id->set_tokenPosition(token_position);
 							// if the id is already in the symbol table
 							if (symtab.find(id->get_terminal()) != symtab.end()) {
-								std::cout << "\t\t" << id->get_terminal() << " is inside already" << std::endl;
 								std::vector<Node*> occurrences = symtab[id->get_terminal()];
 								occurrences.push_back(id);
-								std::cout << "\t\toccureences.size() " << occurrences.size() << std::endl;
 								symtab[id->get_terminal()] = occurrences;
 							}
 							// if the id is not in the symbol table
 							else {
-								std::cout << "\t\t" << id->get_terminal() << " is NOT inside already" << std::endl;
 								// create vector to store id occurences
 								std::vector<Node*> occurrences;
 								occurrences.push_back(id);
@@ -257,6 +253,7 @@ int Parser::get_tokenPosition() {
 }
 
 int Parser::find_tokenId(std::string token) {
+	std::cout << "\t\tfind_tokenId token = " << token << std::endl;
 	std::unordered_map<std::string, int>::const_iterator get_token = token_map.find(token);
 	if (token == "int")
 		return 3;
@@ -269,7 +266,7 @@ int Parser::find_tokenId(std::string token) {
 	else if (get_token == token_map.end()) {
 		return 99; //Return the ID for error
 	}
-	else																						//Found and return token's ID
+	else //Found and return token's ID
 	{
 		return get_token->second;
 	}
@@ -280,7 +277,7 @@ int Parser::find_tokenId(std::string token) {
 *	This function prints the symbol table.                                             					*
 ********************************************************************************************************/
 void Parser::print_symtab() {
-	std::cout << "Printing symtab" << symtab.size() << std::endl;
+	std::cout << "Printing Symbol Table. Number of Identifiers found = " << symtab.size() << std::endl;
 	typedef std::map<std::string, std::vector<Node*>>::iterator it_type;
 	for (it_type iterator = symtab.begin(); iterator != symtab.end(); iterator++) {
 		std::cout << "(Id: \"" << iterator->first << "\"";

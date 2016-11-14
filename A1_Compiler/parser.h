@@ -29,6 +29,7 @@ private:
 	// Additions by Sae Hun Kim and Anthony Nguyen
 	Pst pst;
 	int token_position;
+	int nodeCreationCounter = 0;
 	std::map<std::string, std::vector<Node*>> symtab;
 public:
 	Parser();
