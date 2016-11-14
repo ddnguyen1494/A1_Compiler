@@ -7,9 +7,12 @@
 
 #pragma once
 #include "Node.h"
+#include <vector>
+using std::vector;
 
 class Pst {
 private:
+	Node * tracker;
 	Node * _root;
 	Node * top_stack;
 
@@ -20,6 +23,8 @@ private:
 	void p2acvt(Node *);
 
 	void print_ast(Node*);
+
+	vector<Node*> S_Out_Vector;
 public:
 	Pst();
 

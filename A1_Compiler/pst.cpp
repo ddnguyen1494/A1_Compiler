@@ -58,17 +58,170 @@ void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
 	switch (rId) {
+	case 3: {                           //Stmt -> id equal x
+		//X at pos 0, equal at pos 1, id at pos 2
+		//Grandma abandon Stmt and adopt equal
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
+		//set equal 's mom to Stmt
+		rp->get_kid(1)->set_uplink(gma);
+		//set equal's first kid to X
+		rp->get_kid(1)->change_specific_kid(0, rp->get_kid(0));
+		//set X's mom to equal
+		rp->get_kid(0)->set_uplink(rp->get_kid(1));
+		//set equal's second kid to id
+		rp->get_kid(1)->change_specific_kid(1, rp->get_kid(2));
+		//set id's mom to equal
+		rp->get_kid(2)->set_uplink(rp->get_kid(1));
+		delete rp;
+		break;
+	}
+	case 4: {                             //X = E
+		//Grandma abandon X and adopt E
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set E's mom to gma
+		rp->get_kid(0)->set_uplink(gma);
+
+		delete rp;
+		break;
+	}
+	case 5: {                           //X = input
+		//Grandma abandon X and adopt input
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set input's mom to grandma
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
+
+		break;
+	}
+	case 6: { // Stmt S_Out
+		break;
+	}
+
+	case 7: {									//S_Out -> print ( Elist )
+		//")" has pos 0, Elist has pos 1, "(" has pos 2, print has pos 3
+		//Gma abandon S_Out and adopt print
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(3));
+		//Set print's mom to gma
+		rp->get_kid(3)->set_uplink(gma);
+		//print adopt each kid in S_Out_Vector and be its mom
+		for (int i = 0; i < S_Out_Vector.size(); i++) {
+			rp->get_kid(3)->change_specific_kid(i, S_Out_Vector[i]);
+			rp->get_kid(3)->get_kid(i)->set_uplink(rp->get_kid(3));
+		}
+		delete rp->get_kid(0);
+		delete rp->get_kid(2);
+		delete rp;
+		break;
+	}
+	case 8: {									//Elist -> E Elist2
+		//Elist2 has pos 0, E has pos 1
+		//push E on to vector
+		S_Out_Vector.push_back(rp->get_kid(1));
+		//gma abandon Elist
+		gma->change_specific_kid(rp->get_position(), NULL);
+		delete rp;
+		break;
+	}
+	case 9: {									//Elist2 -> comma Elist
+		//gma abandon Elist
+		tracker = gma;
+		gma->change_specific_kid(rp->get_position(), NULL);
+		delete rp->get_kid(1);
+		delete rp;
+		break;
+	}
+	case 10: { //	E -> T Y
+		std::cout << "\tcase10 kid0 is null? " << (rp->get_kid(0) == NULL) << std::endl;
+		if (rp->get_kid(0) == NULL) {
+			//gma abandon mom E and adopt T
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
+			//set T's mom to gma
+			rp->get_kid(1)->set_uplink(gma);
+			delete rp;
+		}
+		else if (rp->get_kid(0)->get_kid(1) == NULL) {
+			//gma abandon mom E and adopt Y
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set Y's mom to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+
+			std::cout << "\tcase10if " << rp->get_kid(0)->get_numKid() << std::endl;
+			std::cout << "\tcase10if " << rp->get_kid(0)->get_symbol() << std::endl;
+
+			// Y's 2nd child adopts T
+			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));
+			// set T's mom to be Y's 2nd child
+			rp->get_kid(1)->set_uplink(rp->get_kid(0));
+
+			delete rp;
+		}
+		else
+		{
+			//gma abandon mom E and adopt Y
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set Y's mom to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+
+			std::cout << "\tcase10else " << rp->get_kid(0)->get_numKid() << std::endl;
+			std::cout << "\tcase10else " << rp->get_kid(0)->get_symbol() << std::endl;
+
+			// Y's 2nd child adopts T
+			rp->get_kid(0)->get_kid(1)->change_specific_kid(1, rp->get_kid(1));
+			// set T's mom to be Y's 2nd child
+			rp->get_kid(1)->set_uplink(rp->get_kid(0)->get_kid(1));
+
+			delete rp;
+		}
+		break;
+	}
+	case 11: {    // Y -> Opadd T Y
+				  // Y is in pos 0, T is in pos 1, Opadd in pos 2
+		if (rp->get_kid(0) == NULL) {
+			//gma abandon mom Y and adopt Opadd
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(2));
+			// Opadd adopt sibling T
+			rp->get_kid(2)->change_specific_kid(0, rp->get_kid(1));
+			//set Opadd's mom to gma
+			rp->get_kid(2)->set_uplink(gma);
+			//set T's mom to Opadd
+			rp->get_kid(1)->set_uplink(rp->get_kid(2));
+			delete rp;
+		}
+		else {
+			//gma abandon mom Y and adopt kid Y's Opadd
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+			//set kid Y's Opadd to gma
+			rp->get_kid(0)->set_uplink(gma);
+
+			// mom Y's Opadd adopt sibling T
+			rp->get_kid(2)->change_specific_kid(0, rp->get_kid(1));
+			// set sibling F's mom to mom y's Opadd
+			rp->get_kid(1)->set_uplink(rp->get_kid(2));
+
+			// kid Y's Opadd adopt mom Y's Opadd
+			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(2));
+			// set mom Y's Opadd's mom to kid Y's Opadd
+			rp->get_kid(2)->set_uplink(rp->get_kid(0));
+
+			delete rp;
+		}
+		break;
+	}
 	case 12: {         // T -> F Z
-		std::cout << "\tcase12 kid0 is null? " << (rp->get_kid(0) == NULL) << std::endl;
-		if (rp->get_kid(0)->get_kid(1) == NULL) {
+		if (rp->get_kid(0) == NULL) {
+			//gma abandon mom T and adopt F
+			gma->change_specific_kid(rp->get_position(), rp->get_kid(1));
+			//set F's mom to gma
+			rp->get_kid(1)->set_uplink(gma);
+			delete rp;
+		}
+		else if (rp->get_kid(0)->get_kid(1) == NULL) {
 			//gma abandon mom T and adopt Z
 			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 			//set Z's mom to gma
 			rp->get_kid(0)->set_uplink(gma);
-
-
-			std::cout << "\tcase12if " << rp->get_kid(0)->get_numKid() << std::endl;
-			std::cout << "\tcase12if " << rp->get_kid(0)->get_symbol() << std::endl;
 
 			// Z's 2nd child adopts F
 			rp->get_kid(0)->change_specific_kid(1, rp->get_kid(1));
@@ -83,11 +236,6 @@ void Pst::p2acvt(Node * rp) {
 			gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
 			//set Z's mom to gma
 			rp->get_kid(0)->set_uplink(gma);
-
-
-			std::cout << "\tcase12else " << rp->get_kid(0)->get_numKid() << std::endl;
-			std::cout << "\tcase12else " << rp->get_kid(0)->get_symbol() << std::endl;
-
 			// Z's 2nd child adopts F
 			rp->get_kid(0)->get_kid(1)->change_specific_kid(1, rp->get_kid(1));
 			// set F's mom to be Z's 2nd child
