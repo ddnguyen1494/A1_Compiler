@@ -14,7 +14,7 @@ class Node{
 		std::string symbol;
 		Node* upLink;
 		int position;
-		Node * kids[4] = { nullptr };
+		Node * kids[6] = { nullptr };
 		int ruleId;
 		int numKids = 0;
 		int lineNum; // Added line num per Daniel's request
@@ -43,8 +43,7 @@ class Node{
 		Node * get_kid(int);
 
 		int get_numKid();
-		void dec_numKid();
-		void set_numKid(int);
+		void set_numKid();
 
 		int get_ruleId();
 		void set_ruleId(int);

@@ -38,11 +38,14 @@ void Pst::print(Node * rp) {
 }
 
 
-void Pst::print_ast(Node * rp) {
+void Pst::print_ast(Node * rp, int tabs) {
+	for (int i = 0; i < tabs; i++) {
+		std::cout << "  ";
+	}
 	if (rp->get_symbol() != "Pgm") {
-		std::cout << "N " << rp->get_nodeCreationOrder() << ": " << rp->get_symbol()
+		std::cout << "(N " << rp->get_nodeCreationOrder() << ": " << rp->get_symbol()
 			<< " mom= " << rp->get_uplink()->get_nodeCreationOrder() << " kids= " << rp->get_numKid() << " ";
-		if (rp->get_tokenId() == 2 || rp->get_tokenId() == 3 || rp->get_tokenId() == 4 || rp->get_tokenId() == 5 ) {
+		if (rp->get_tokenId() == 2 || rp->get_tokenId() == 3 || rp->get_tokenId() == 4 || rp->get_tokenId() == 5) {
 			std::cout << "(T: " << rp->get_terminal() << " lin= " << rp->get_lineNum()
 				<< " pos= " << rp->get_tokenPosition();
 		}
@@ -460,12 +463,12 @@ void Pst::p2ast(Node * rp) {
 	p2acvt(rp);
 }
 
-void Pst::print_preorder_ast(Node * rp) {
+void Pst::print_preorder_ast(Node * rp, int tabs) {
 	if (!rp) {
 		return;
 	}
-	print_ast(rp);
-	for (int i = 3; i >= 0; i--) {
-		print_preorder_ast(rp->get_kid(i));
+	print_ast(rp, tabs);
+	for (int i = 5; i >= 0; i--) {
+		print_preorder_ast(rp->get_kid(i), tabs + 1);
 	}
 }

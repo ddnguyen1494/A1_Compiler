@@ -22,7 +22,7 @@ private:
 
 	void p2acvt(Node *);
 
-	void print_ast(Node*);
+	void print_ast(Node*, int);
 
 	vector<Node*> S_Out_Vector;
 	vector<Node*> prog_vector;
@@ -43,6 +43,6 @@ public:
 	
 	void p2ast(Node *);
 
-	void print_preorder_ast(Node *);
+	void print_preorder_ast(Node *, int);
 };
 #endif
