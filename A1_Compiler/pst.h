@@ -12,7 +12,6 @@ using std::vector;
 
 class Pst {
 private:
-	Node * tracker;
 	Node * _root;
 	Node * top_stack;
 
@@ -25,6 +24,7 @@ private:
 	void print_ast(Node*);
 
 	vector<Node*> S_Out_Vector;
+	vector<Node*> prog_vector;
 public:
 	Pst();
 

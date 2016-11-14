@@ -19,7 +19,7 @@ int main() {
 	int lineNum = 0;
 	bool correct_syntax;
 	Lexer A1_lexer;
-
+	char s;
 	//Getting every line of input and passing to A1_lexer's lex function
 	while (getline(cin, inputLine)) {
 		lineNum++;
@@ -40,7 +40,8 @@ int main() {
 
 	A1_lexer.get_parser()->print_create_ast();
 	A1_lexer.print_symtab();
-	system("pause");
+
+
  	return 0;
 
 	

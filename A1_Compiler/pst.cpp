@@ -58,6 +58,34 @@ void Pst::p2acvt(Node * rp) {
 	int rId = rp->get_ruleId();
 	Node * gma = rp->get_uplink();
 	switch (rId) {
+	case 1:								//Pgm -> prog { Slist }
+	{
+		//prog has pos 3, { has pos 2, Slist has pos 1, } has pos 0
+		//Slist is null
+		//gma abandon Pgm and adopt prog
+		gma->change_specific_kid(0, rp->get_kid(3));
+		//set prog's mom to gma
+		rp->get_kid(3)->set_uplink(gma);
+		//assign contents of prog_vector as children to prog
+		for (int i = 0; i < prog_vector.size(); i++) {
+			rp->get_kid(3)->change_specific_kid(i, prog_vector[i]);
+			rp->get_kid(3)->get_kid(i)->set_uplink(rp->get_kid(3));
+		}
+		delete rp->get_kid(0);
+		delete rp->get_kid(2);
+		delete rp;
+	}
+	case 2: {							//S_list -> Stmt semi Slist
+		//Stmt has pos 2, semi has pos 1, Slist has pos 0
+		//Because ast-conversion function traverse post-order so the child Slist will always be null
+		//gma abandon Slist
+		gma->change_specific_kid(rp->get_position(), NULL);
+		prog_vector.push_back(rp->get_kid(2));
+		delete rp->get_kid(1);
+		delete rp->get_kid(2);
+		delete rp;
+		break;
+	}
 	case 3: {                           //Stmt -> id equal x
 		//X at pos 0, equal at pos 1, id at pos 2
 		//Grandma abandon Stmt and adopt equal
@@ -93,7 +121,13 @@ void Pst::p2acvt(Node * rp) {
 
 		break;
 	}
-	case 6: { // Stmt S_Out
+
+	case 6: {								// Stmt -> S_Out
+		//gma -> abandon stmt and adopt S_Out
+		gma->change_specific_kid(rp->get_position(), rp->get_kid(0));
+		//set S_Out 's mom to gma
+		rp->get_kid(0)->set_uplink(gma);
+		delete rp;
 		break;
 	}
 
@@ -111,6 +145,7 @@ void Pst::p2acvt(Node * rp) {
 		delete rp->get_kid(0);
 		delete rp->get_kid(2);
 		delete rp;
+		S_Out_Vector.clear();
 		break;
 	}
 	case 8: {									//Elist -> E Elist2
@@ -124,7 +159,6 @@ void Pst::p2acvt(Node * rp) {
 	}
 	case 9: {									//Elist2 -> comma Elist
 		//gma abandon Elist
-		tracker = gma;
 		gma->change_specific_kid(rp->get_position(), NULL);
 		delete rp->get_kid(1);
 		delete rp;
